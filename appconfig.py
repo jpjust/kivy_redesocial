@@ -10,7 +10,7 @@ Altere o atributo 'servidor' desta classe para indicar o endereço do web servic
 import json
 
 class AppConfig:
-    servidor = 'http://just-pavilion.lan:5000'
+    servidor = 'http://127.0.0.1:5000'
     config = {}
 
     '''
