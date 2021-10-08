@@ -22,6 +22,21 @@
     # Espaçamentos
     padding: 20
     spacing: 20
+    # Plano de fundo
+    canvas.before:
+        Color:
+            rgba: 0, 0.25, 0.5, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<GridLayout>
+    # Altura variável
+    size_hint_y: None
+    height: self.minimum_height
+    # Espaçamentos
+    padding: 20
+    spacing: 20
 
 <Label>
     # Fonte
@@ -54,3 +69,11 @@
     multiline: False
     # O TAB não entra no texto, ao invés disso, pula pro próximo campo
     write_tab: False
+
+<AsyncImage>
+    # Tamanho das imagens
+    size_hint: None, None
+    size: dp(64), dp(64)
+    # Ajuste das imagens
+    allow_stretch: True
+    keep_ratio: False

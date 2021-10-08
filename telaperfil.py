@@ -24,6 +24,8 @@ class TelaPerfil(Screen):
     # Elementos de interface
     lb_login = ObjectProperty(None)
     lb_nome = ObjectProperty(None)
+    img_perfil = ObjectProperty(None)
+    btn_foto = ObjectProperty(None)
 
     '''
     Envia uma requisição do perfil via método GET.
@@ -37,6 +39,14 @@ class TelaPerfil(Screen):
                 'Authorization': f'Bearer {AppConfig.get_config("token")}'
             },
             on_success = self.perfil_sucesso,
+            on_error = self.erro,
+        )
+
+        UrlRequest(f"{AppConfig.servidor}/api/foto/{login}",
+            req_headers = {
+                'Authorization': f'Bearer {AppConfig.get_config("token")}'
+            },
+            on_success = self.foto_sucesso,
             on_error = self.erro,
         )
     
@@ -60,8 +70,8 @@ class TelaPerfil(Screen):
     Efetua o tratamento em caso de erro ao efetuar a requisição.
     '''
     def erro(self, req, erro):
-        self.lb_login = ''
-        self.lb_nome = 'Erro.'
+        self.lb_login.text = ''
+        self.lb_nome.text = 'Erro.'
 
     '''
     Envia uma requisição de desautenticação via método GET.
@@ -79,16 +89,25 @@ class TelaPerfil(Screen):
             on_success = self.saida_sucesso,
             on_error = self.erro,
         )
+        AppConfig.set_config('token', None)
     
     '''
     Recebe a resposta da requisição de saída.
 
     Em caso de sucesso, retorna à tela de login.
-    Independente disso, o app apaga o token no AppConfig.
     '''
     def saida_sucesso(self, req, resposta):
-        AppConfig.set_config('token', None)
-
         if (resposta['status'] == 0):
             self.manager.transition.direction = 'right'
             self.manager.current = 'login'
+
+    '''
+    Recebe a resposta da requisição de foto.
+
+    Em caso de sucesso, atualiza a imagem.
+    '''
+    def foto_sucesso(self, req, resposta):
+        if (resposta['status'] == 0):
+            # Atualiza a foto na interface
+            self.img_perfil.source = resposta['url']
+            self.img_perfil.reload()
